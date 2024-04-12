@@ -1,0 +1,38 @@
+@(
+randomNumber: Int = 0
+)
+
+@main("Show random number and Receive it") {
+<h1>play 3.0 でServer Sent Events を試します</h1>
+/random1 にアクセスすると、random な数字が表示されます。
+
+別のwindow にて、/random1 にアクセスすると、random な数字が表示されます。
+と同時に、元のwindow に、そのrandom な数字が送信されます。
+
+<h2>randomNumber</h2>
+<div>
+    @randomNumber
+</div>
+<h2>sse message</h2>
+<div id="sse-message">
+</div>
+
+
+<script>
+    const currentPath = window.location.pathname;
+    let evtSource;
+    if (currentPath === '/random1') {
+        console.log('here');
+        evtSource = new EventSource('/sse1');
+    } else if (currentPath === '/random2') {
+        console.log('there');
+        evtSource = new EventSource('/sse2');
+    }
+    let sseMessage = document.getElementById("sse-message");
+
+    evtSource.addEventListener('message', function (e) {
+        console.log('here');
+        sseMessage.textContent = e.data;
+    });
+</script>
+}
